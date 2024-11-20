@@ -1,0 +1,30 @@
+import pandas as pd
+import numpy as np
+from sklearn.cluster import DBSCAN
+from sklearn.preprocessing import StandardScaler
+import matplotlib.pyplot as plt
+
+# Load the dataset
+data = pd.read_csv("Wholesale_customers_data.csv")
+
+# Selecting features for clustering (e.g., 'Fresh' and 'Milk' spending categories)
+X = data[['Fresh', 'Milk']]
+
+# Standardize features to normalize scale
+scaler = StandardScaler()
+X_scaled = scaler.fit_transform(X)
+
+# DBSCAN model
+dbscan = DBSCAN(eps=0.5, min_samples=5)  # Tune these parameters as needed
+dbscan.fit(X_scaled)
+
+# Labels of clusters (-1 indicates noise)
+labels = dbscan.labels_
+
+# Plotting clusters
+plt.figure(figsize=(10, 6))
+plt.scatter(X_scaled[:, 0], X_scaled[:, 1], c=labels, cmap='viridis', marker='o', edgecolor='k', s=50)
+plt.title('DBSCAN Clustering')
+plt.xlabel('Fresh (scaled)')
+plt.ylabel('Milk (scaled)')
+plt.show()
